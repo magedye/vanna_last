@@ -1,0 +1,42 @@
+[2025-11-18 02:24:02] [Linux] (root) [INFO] Started - Action: dry, Filter: 
+[2025-11-18 02:24:54] [Linux] (root) [INFO] Started - Action: cat, Filter: test
+[2025-11-18 02:24:54] [Linux] (root) [INFO] Executed:  [Exit: 0]
+[2025-11-18 02:25:54] [Linux] (root) [INFO] Started - Action: cat, Filter: info
+[2025-11-18 02:25:57] [Linux] (root) [INFO] Executed:  [Exit: 0]
+[2025-11-18 02:26:23] [Linux] (root) [INFO] Started - Action: , Filter: 
+[2025-11-18 02:28:44] [Linux] (root) [INFO] Started - Action: , Filter: 
+[2025-11-18 02:28:46] [Linux] (root) [WARN] Malformed command at line 55: curl http://localhost:8000/health :: Check API health :: exec
+[2025-11-18 02:28:46] [Linux] (root) [WARN] Malformed command at line 56: curl http://localhost:8000/health | jq . :: Check health (formatted) :: exec
+[2025-11-18 02:28:46] [Linux] (root) [WARN] Malformed command at line 57: curl http://localhost:8000/metrics :: View Prometheus metrics :: exec
+[2025-11-18 02:28:46] [Linux] (root) [WARN] Malformed command at line 62: curl -X POST http://localhost:8000/api/v1/generate-sql -H "Content-Type: application/json" -d '{"question":"How many users?"}' :: Test SQL generation :: copy
+[2025-11-18 02:28:46] [Linux] (root) [WARN] Malformed command at line 63: curl http://localhost:8000/docs :: Open API docs :: show :: Visit http://localhost:8000/docs in browser
+[2025-11-18 02:28:46] [Linux] (root) [WARN] Malformed command at line 64: curl http://localhost:8000/redoc :: Open ReDoc :: show :: Visit http://localhost:8000/redoc in browser
+[2025-11-18 02:28:46] [Linux] (root) [WARN] Malformed command at line 80: cd vanna-engine && uvicorn app.main:app --reload :: Run with Uvicorn hot reload :: exec
+[2025-11-18 02:28:46] [Linux] (root) [WARN] Malformed command at line 93: lsof -i :8000 :: Check what's using port 8000 :: exec
+[2025-11-18 02:28:48] [Linux] (root) [INFO] Started - Action: cat, Filter: info
+[2025-11-18 02:28:50] [Linux] (root) [WARN] Malformed command at line 55: curl http://localhost:8000/health :: Check API health :: exec
+[2025-11-18 02:28:50] [Linux] (root) [WARN] Malformed command at line 56: curl http://localhost:8000/health | jq . :: Check health (formatted) :: exec
+[2025-11-18 02:28:50] [Linux] (root) [WARN] Malformed command at line 57: curl http://localhost:8000/metrics :: View Prometheus metrics :: exec
+[2025-11-18 02:28:50] [Linux] (root) [WARN] Malformed command at line 62: curl -X POST http://localhost:8000/api/v1/generate-sql -H "Content-Type: application/json" -d '{"question":"How many users?"}' :: Test SQL generation :: copy
+[2025-11-18 02:28:50] [Linux] (root) [WARN] Malformed command at line 63: curl http://localhost:8000/docs :: Open API docs :: show :: Visit http://localhost:8000/docs in browser
+[2025-11-18 02:28:50] [Linux] (root) [WARN] Malformed command at line 64: curl http://localhost:8000/redoc :: Open ReDoc :: show :: Visit http://localhost:8000/redoc in browser
+[2025-11-18 02:28:50] [Linux] (root) [WARN] Malformed command at line 80: cd vanna-engine && uvicorn app.main:app --reload :: Run with Uvicorn hot reload :: exec
+[2025-11-18 02:28:51] [Linux] (root) [WARN] Malformed command at line 93: lsof -i :8000 :: Check what's using port 8000 :: exec
+[2025-11-18 02:29:05] [Linux] (root) [INFO] Started - Action: cat, Filter: info
+[2025-11-18 02:29:08] [Linux] (root) [WARN] Malformed command at line 55: curl http://localhost:8000/health :: Check API health :: exec
+[2025-11-18 02:29:08] [Linux] (root) [WARN] Malformed command at line 56: curl http://localhost:8000/health | jq . :: Check health (formatted) :: exec
+[2025-11-18 02:29:08] [Linux] (root) [WARN] Malformed command at line 57: curl http://localhost:8000/metrics :: View Prometheus metrics :: exec
+[2025-11-18 02:29:08] [Linux] (root) [WARN] Malformed command at line 62: curl -X POST http://localhost:8000/api/v1/generate-sql -H "Content-Type: application/json" -d '{"question":"How many users?"}' :: Test SQL generation :: copy
+[2025-11-18 02:29:08] [Linux] (root) [WARN] Malformed command at line 63: curl http://localhost:8000/docs :: Open API docs :: show :: Visit http://localhost:8000/docs in browser
+[2025-11-18 02:29:08] [Linux] (root) [WARN] Malformed command at line 64: curl http://localhost:8000/redoc :: Open ReDoc :: show :: Visit http://localhost:8000/redoc in browser
+[2025-11-18 02:29:08] [Linux] (root) [WARN] Malformed command at line 80: cd vanna-engine && uvicorn app.main:app --reload :: Run with Uvicorn hot reload :: exec
+[2025-11-18 02:29:09] [Linux] (root) [WARN] Malformed command at line 93: lsof -i :8000 :: Check what's using port 8000 :: exec
+[2025-11-18 02:29:10] [Linux] (root) [INFO] Started - Action: search, Filter: docker
+[2025-11-18 02:29:12] [Linux] (root) [WARN] Malformed command at line 55: curl http://localhost:8000/health :: Check API health :: exec
+[2025-11-18 02:29:12] [Linux] (root) [WARN] Malformed command at line 56: curl http://localhost:8000/health | jq . :: Check health (formatted) :: exec
+[2025-11-18 02:29:12] [Linux] (root) [WARN] Malformed command at line 57: curl http://localhost:8000/metrics :: View Prometheus metrics :: exec
+[2025-11-18 02:29:12] [Linux] (root) [WARN] Malformed command at line 62: curl -X POST http://localhost:8000/api/v1/generate-sql -H "Content-Type: application/json" -d '{"question":"How many users?"}' :: Test SQL generation :: copy
+[2025-11-18 02:29:12] [Linux] (root) [WARN] Malformed command at line 63: curl http://localhost:8000/docs :: Open API docs :: show :: Visit http://localhost:8000/docs in browser
+[2025-11-18 02:29:12] [Linux] (root) [WARN] Malformed command at line 64: curl http://localhost:8000/redoc :: Open ReDoc :: show :: Visit http://localhost:8000/redoc in browser
+[2025-11-18 02:29:12] [Linux] (root) [WARN] Malformed command at line 80: cd vanna-engine && uvicorn app.main:app --reload :: Run with Uvicorn hot reload :: exec
+[2025-11-18 02:29:13] [Linux] (root) [WARN] Malformed command at line 93: lsof -i :8000 :: Check what's using port 8000 :: exec

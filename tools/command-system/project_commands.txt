@@ -1,0 +1,96 @@
+# ============================================================================
+# Vanna Insight Engine - Project Commands
+# ============================================================================
+# Format: command :: description :: mode :: notes (optional)
+# Modes: exec (execute), copy (copy to clipboard), show (display only)
+# Categories defined with [category_name]
+# ============================================================================
+
+[environment]
+cp docker/env/.env.example docker/env/.env.dev :: Create dev environment file :: exec
+cp docker/env/.env.example .env.prod :: Create prod environment file :: exec
+nano docker/env/.env.dev :: Edit dev environment :: exec
+nano .env.prod :: Edit prod environment :: exec
+
+[install]
+pip install -r requirements.txt :: Install Python dependencies :: exec
+pip install --upgrade pip :: Upgrade pip :: exec
+docker --version :: Check Docker version :: show
+docker compose version :: Check Docker Compose version :: show
+python3 --version :: Check Python version :: show
+
+[database]
+alembic upgrade head :: Run database migrations :: exec
+alembic revision --autogenerate -m "description" :: Create new migration :: copy :: Replace 'description' with actual message
+docker compose exec postgres psql -U postgres -d vanna_db :: Access PostgreSQL CLI :: exec
+docker compose exec postgres pg_dump -U postgres vanna_db > backup.sql :: Backup database :: copy
+
+[build]
+docker compose build :: Build all Docker images :: exec
+docker compose build --no-cache :: Build without cache :: exec
+docker compose build api :: Build API service only :: exec
+
+[run]
+cd vanna-engine && ./run.sh :: Start development server :: exec
+cd vanna-engine && ./run.sh --env prod :: Start production server :: exec
+cd vanna-engine && ./run.sh --env stage :: Start staging server :: exec
+cd vanna-engine && ./run.sh --clean :: Clean restart (removes data) :: exec :: ⚠️ DATA LOSS WARNING
+
+[test]
+cd vanna-engine && pytest :: Run all tests :: exec
+cd vanna-engine && pytest -v :: Run tests with verbose output :: exec
+cd vanna-engine && pytest tests/unit/ :: Run unit tests only :: exec
+cd vanna-engine && pytest tests/integration/ :: Run integration tests :: exec
+cd vanna-engine && pytest --cov=app --cov-report=html :: Run tests with coverage :: exec
+
+[docker]
+docker compose ps :: Show running containers :: exec
+docker compose logs -f api :: Follow API logs :: exec
+docker compose logs --tail=50 :: Show last 50 log lines :: exec
+docker compose restart api :: Restart API service :: exec
+docker compose down :: Stop all services :: exec
+docker compose down -v :: Stop and remove volumes :: exec :: ⚠️ DATA LOSS WARNING
+
+[monitor]
+curl http://localhost:8000/health :: Check API health :: exec
+curl http://localhost:8000/health | jq . :: Check health (formatted) :: exec
+curl http://localhost:8000/metrics :: View Prometheus metrics :: exec
+docker stats :: Show container resource usage :: exec
+docker compose exec postgres psql -U postgres -d vanna_db -c "\\dt" :: List database tables :: exec
+
+[api]
+curl -X POST http://localhost:8000/api/v1/generate-sql -H "Content-Type: application/json" -d '{"question":"How many users?"}' :: Test SQL generation :: copy
+curl http://localhost:8000/docs :: Open API docs :: show :: Visit http://localhost:8000/docs in browser
+curl http://localhost:8000/redoc :: Open ReDoc :: show :: Visit http://localhost:8000/redoc in browser
+
+[cleanup]
+docker system prune -f :: Clean Docker system :: exec
+docker volume prune -f :: Remove unused volumes :: exec
+find . -type d -name __pycache__ -exec rm -r {} + :: Remove Python cache :: exec
+find . -type f -name "*.pyc" -delete :: Remove .pyc files :: exec
+
+[deploy]
+cd vanna-engine && kubectl apply -k k8s/overlays/production :: Deploy to K8s production :: copy
+cd vanna-engine && kubectl apply -k k8s/overlays/staging :: Deploy to K8s staging :: copy
+cd vanna-engine && ./run.sh --env prod --build :: Build and deploy production :: exec
+
+[dev]
+code . :: Open project in VS Code :: exec
+cd vanna-engine && python -m app.main :: Run API directly (no Docker) :: exec
+cd vanna-engine && uvicorn app.main:app --reload :: Run with Uvicorn hot reload :: exec
+
+[info]
+cat README.md :: Show README :: exec
+cat QUICK_STARTUP.md :: Show startup guide :: exec
+cat vanna-engine/AGENTS.md :: Show developer commands :: exec
+cat vanna-engine/Production_Readiness_Assessment_FINAL.md :: Show production assessment :: exec
+ls -la vanna-engine/ :: List vanna-engine directory :: exec
+du -sh vanna-engine/ :: Check project size :: exec
+
+[troubleshoot]
+docker compose logs api | grep ERROR :: Find API errors :: exec
+docker compose logs postgres | grep ERROR :: Find database errors :: exec
+lsof -i :8000 :: Check what's using port 8000 :: exec
+docker compose config :: Validate Docker Compose config :: exec
+cd vanna-engine && alembic current :: Show current migration :: exec
+cd vanna-engine && alembic history :: Show migration history :: exec
