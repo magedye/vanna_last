@@ -3,12 +3,6 @@
 import os
 from dotenv import load_dotenv
 
-# Import Runners
-from db_connect.sqlite_runner import SqliteRunner
-from db_connect.oracle_runner import OracleRunner
-from db_connect.postgres_runner import PostgresRunner
-from db_connect.mssql_runner import MSSQLRunner
-
 load_dotenv()
 
 
@@ -98,16 +92,23 @@ def get_db_runner():
     # 1. SQLite (Local Development)
     # -------------------------------------------------------
     if db_type == "sqlite":
-        sqlite_path = os.getenv("SQLITE_DB_PATH")
-        if not sqlite_path:
-            raise ValueError("❌ SQLITE_DB_PATH is missing in .env")
+        # Lazy import to avoid crashing when Oracle/MSSQL deps are absent
+        from db_connect.sqlite_runner import SqliteRunner
+
+        sqlite_path = (
+            os.getenv("SQLITE_DB_PATH")
+            or os.getenv("VANNA_DATABASE_PATH")
+            or "vanna_db.db"
+        )
         print(f"📂 Using SQLite at: {sqlite_path}")
-        return SqliteRunner(sqlite_path)
+        return SqliteRunner(database_path=sqlite_path)
 
     # -------------------------------------------------------
     # 2. Oracle (Enterprise)
     # -------------------------------------------------------
     if db_type == "oracle":
+        from db_connect.oracle_runner import OracleRunner
+
         user = _validate_env("ORACLE_USER")
         password = _validate_env("ORACLE_PASSWORD")
         dsn = build_oracle_dsn()
@@ -119,6 +120,8 @@ def get_db_runner():
     # 3. PostgreSQL
     # -------------------------------------------------------
     if db_type in ("postgres", "postgresql"):
+        from db_connect.postgres_runner import PostgresRunner
+
         url = build_postgres_url()
         print(f"🐘 Using PostgreSQL: {url}")
         return PostgresRunner(url)
@@ -127,6 +130,8 @@ def get_db_runner():
     # 4. MSSQL
     # -------------------------------------------------------
     if db_type == "mssql":
+        from db_connect.mssql_runner import MSSQLRunner
+
         url = build_mssql_url()
         print(f"🧩 Using MSSQL: {url}")
         return MSSQLRunner(url)

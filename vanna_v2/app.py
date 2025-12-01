@@ -15,7 +15,6 @@ from vanna.servers.fastapi import VannaFastAPIServer
 # Integrations
 from vanna.integrations.google import GeminiLlmService
 from vanna.integrations.chromadb import ChromaAgentMemory
-from vanna.integrations.sqlite import SqliteRunner
 
 # Tools
 from vanna.tools import RunSqlTool, VisualizeDataTool
@@ -26,8 +25,11 @@ from vanna.tools.agent_memory import (
 )
 
 # Custom
+try:
+    from db_connect.factory import get_db_runner  # Preferred package path
+except ImportError:
+    from factory import get_db_runner  # Local fallback for monorepo layout
 from custom_tools import TrainRagTool, TrainRagArgs
-from db_connect.oracle_runner import OracleRunner
 from security.guardrails import validate_user_input
 
 
@@ -37,6 +39,7 @@ from security.guardrails import validate_user_input
 load_dotenv()
 
 ENV = os.getenv("ENV", "DEV")
+DB_TYPE = os.getenv("DB_TYPE", "sqlite").lower()
 API_KEY = os.getenv("GOOGLE_API_KEY")
 
 DB_PATH = os.getenv("VANNA_DATABASE_PATH", "./mydb.db")
@@ -58,32 +61,19 @@ llm = GeminiLlmService(
 # ---------------------------------------
 # 3. Configure Database Runner
 # ---------------------------------------
-if ENV == "DEV":
-    print(f"📂 Using SQLite Runner → {DB_PATH}")
-    sql_runner = SqliteRunner(database_path=DB_PATH)
-    training_tool = TrainRagTool(db_path=DB_PATH)
+# Keep SQLite-first defaults while allowing DB_TYPE override
+os.environ.setdefault("DB_TYPE", DB_TYPE)
+os.environ.setdefault("SQLITE_DB_PATH", DB_PATH)
 
-else:
-    print(f"🏦 Using Oracle Runner → {os.getenv('ORACLE_DSN')}")
-    sql_runner = OracleRunner(
-        user=os.getenv("ORACLE_USER"),
-        password=os.getenv("ORACLE_PASS"),
-        dsn=os.getenv("ORACLE_DSN")
-    )
-    # تمرير بيانات الاتصال مباشرة
-    training_tool = TrainRagTool(
-        db_path=None,
-        oracle_user=os.getenv("ORACLE_USER"),
-        oracle_pass=os.getenv("ORACLE_PASS"),
-        oracle_dsn=os.getenv("ORACLE_DSN")
-    )
-
+sql_runner = get_db_runner()
 db_tool = RunSqlTool(sql_runner=sql_runner)
+training_tool = TrainRagTool(sql_runner, db_type=DB_TYPE)
 
 
 # ---------------------------------------
 # 4. Configure Memory
 # ---------------------------------------
+os.makedirs(CHROMA_PATH, exist_ok=True)
 agent_memory = ChromaAgentMemory(
     collection_name=COLLECTION_NAME,
     persist_directory=CHROMA_PATH
