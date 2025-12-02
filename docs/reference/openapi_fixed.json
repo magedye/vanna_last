@@ -1,0 +1,145 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Vanna Insight Engine API (Static Export)",
+    "version": "1.0.0",
+    "description": "Statically generated OpenAPI spec derived from repository analysis of vanna-engine (not runtime export)."
+  },
+  "servers": [
+    { "url": "http://localhost:8000", "description": "Local development server" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email","password"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string", "minLength": 8 }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": { "type": "string" },
+          "token_type": { "type": "string", "example": "bearer" },
+          "user_id": { "type": "string" },
+          "email": { "type": "string" }
+        }
+      },
+      "SignupRequest": {
+        "type": "object",
+        "required": ["email","password","full_name"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string", "minLength": 8 },
+          "full_name": { "type": "string" }
+        }
+      },
+      "SignupResponse": {
+        "type": "object",
+        "properties": {
+          "user_id": { "type": "string" },
+          "email": { "type": "string" },
+          "full_name": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      },
+      "GenerateSQLRequest": {
+        "type": "object",
+        "required": ["question"],
+        "properties": {
+          "question": { "type": "string", "minLength": 5, "maxLength": 500 },
+          "schema_name": { "type": "string" },
+          "force_rule_based": { "type": "boolean", "default": false }
+        }
+      },
+      "SQLResponse": {
+        "type": "object",
+        "properties": {
+          "sql": { "type": "string" },
+          "correlation_id": { "type": "string" },
+          "status": { "type": "string", "example": "success" }
+        }
+      },
+      "SQLGenerationResponse": {
+        "type": "object",
+        "properties": {
+          "sql": { "type": "string" },
+          "correlation_id": { "type": "string" },
+          "confidence": { "type": "number", "format": "float" },
+          "intent": { "type": "object" },
+          "warnings": { "type": "array", "items": { "type": "string" } },
+          "status": { "type": "string", "example": "success" }
+        }
+      },
+      "ExplainSQLRequest": { "type": "object", "required": ["sql"], "properties": { "sql": { "type": "string" } } },
+      "ExplanationResponse": { "type": "object", "properties": { "explanation": { "type": "string" }, "correlation_id": { "type": "string" }, "status": { "type": "string" } } },
+      "FixSQLRequest": { "type": "object", "required": ["sql","error_msg"], "properties": { "sql": { "type": "string" }, "error_msg": { "type": "string" } } },
+      "SQLValidationRequest": { "type": "object", "required": ["sql"], "properties": { "sql": { "type": "string" }, "question_id": { "type": "string" } } },
+      "ValidationIssue": { "type": "object", "properties": { "severity": { "type": "string" }, "message": { "type": "string" }, "line": { "type": "integer" } } },
+      "SQLValidationResponse": { "type": "object", "properties": { "is_valid": { "type": "boolean" }, "correlation_id": { "type": "string" }, "issues": { "type": "array", "items": { "$ref": "#/components/schemas/ValidationIssue" } }, "status": { "type": "string" } } },
+      "SQLExecutionRequest": { "type": "object", "required": ["question","sql"], "properties": { "question": { "type": "string" }, "sql": { "type": "string" }, "parameters": { "type": "object", "additionalProperties": true }, "limit": { "type": "integer", "default": 1000 } } },
+      "SQLExecutionResponse": { "type": "object", "properties": { "rows": { "type": "array", "items": { "type": "object", "additionalProperties": true } }, "columns": { "type": "array", "items": { "type": "string" } }, "row_count": { "type": "integer" }, "execution_time_ms": { "type": "number" }, "correlation_id": { "type": "string" }, "cached": { "type": "boolean" }, "status": { "type": "string" } } },
+      "FeedbackRequest": { "type": "object", "required": ["query_id","rating"], "properties": { "query_id": { "type": "string" }, "rating": { "type": "integer", "minimum": 1, "maximum": 5 }, "comment": { "type": "string" }, "approved_for_training": { "type": "boolean" } } },
+      "FeedbackResponse": { "type": "object", "properties": { "feedback_id": { "type": "string" }, "query_id": { "type": "string" }, "status": { "type": "string" } } },
+      "TrainingRequestSchema": { "type": "object", "properties": { "feedback_ids": { "type": "array", "items": { "type": "string" } }, "description": { "type": "string" } } },
+      "TrainingResponse": { "type": "object", "properties": { "training_id": { "type": "string" }, "status": { "type": "string" }, "items_count": { "type": "integer" }, "message": { "type": "string" } } },
+      "HealthResponse": { "type": "object", "properties": { "status": { "type": "string" }, "version": { "type": "string" }, "providers_active": { "type": "integer" }, "dependencies": { "type": "object" }, "features": { "type": "object" } } },
+      "ErrorResponse": { "type": "object", "properties": { "error": { "type": "string" }, "correlation_id": { "type": "string" } } }
+    }
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Root",
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HealthResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": { "get": { "summary": "Prometheus metrics", "responses": { "200": { "description": "text metrics" } } } },
+    "/metrics/json": { "get": { "summary": "JSON metrics", "responses": { "200": { "description": "JSON metrics" } } } },
+    "/api/v1/login": {
+      "post": {
+        "summary": "Login",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginRequest" } } } },
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponse" } } } }, "401": { "description": "Unauthorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } }
+      }
+    },
+    "/api/v1/signup": {
+      "post": {
+        "summary": "Signup",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SignupRequest" } } } },
+        "responses": { "200": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SignupResponse" } } } } }
+      }
+    },
+    "/api/v1/generate-sql": {
+      "post": {
+        "summary": "Generate SQL (public)",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GenerateSQLRequest" } } } },
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SQLResponse" } } } }, "429": { "description": "Too Many Requests", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } }
+      }
+    },
+    "/api/v1/fix-sql": {
+*** End Fragment

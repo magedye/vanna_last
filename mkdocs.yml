@@ -1,0 +1,9 @@
+site_name: Vanna Insight Engine Documentation
+
+nav:
+  - Home: README.md
+  - Technical Documentation: docs/technical/
+  - Operational Documentation: docs/operational/
+  - API Reference: docs/reference/
+  - Project Management: docs/project_mgmt/
+  - Archive: docs/archive/
