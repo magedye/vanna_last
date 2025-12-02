@@ -10,6 +10,8 @@ env/
 # Environment & Secrets
 .env
 !.env.example
+.env.complete
+.vanna_amp_state/
 .streamlit/secrets.toml
 
 # Databases & Vector Stores
