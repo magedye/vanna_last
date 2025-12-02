@@ -1,0 +1,30 @@
+# Python & Runtime
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# Environment & Secrets
+.env
+!.env.example
+.streamlit/secrets.toml
+
+# Databases & Vector Stores
+*.db
+*.sqlite3
+chroma_db/
+chroma_mvp/
+Wallet_*/
+
+# Logs & Debugging
+logs/
+*.log
+npm-debug.log
+
+# OS & IDE System Files
+.DS_Store
+.vscode/
+.idea/
